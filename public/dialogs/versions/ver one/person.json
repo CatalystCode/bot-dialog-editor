@@ -1,0 +1,79 @@
+{
+  "title": "Person",
+  "headerTemplate": "{{ self.name }} (age {{ self.age }})",
+  "type": "object",
+  "format": "grid",
+  "id": "person",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "First and Last name",
+      "tooltip": "First and last name of the simple person",
+      "minLength": 4
+    },
+    "age": {
+      "type": "integer",
+      "default": 21,
+      "minimum": 18,
+      "maximum": 99
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female"
+      ]
+    },
+    "location": {
+      "type": "object",
+      "title": "Location",
+      "format": "grid",
+      "properties": {
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "citystate": {
+          "type": "string",
+          "description": "This is generated automatically from the previous two fields",
+          "template": "{{city}}, {{state}}",
+          "watch": {
+            "city": "person.location.city",
+            "state": "person.location.state"
+          }
+        }
+      }
+    },
+    "pets": {
+      "type": "array",
+      "format": "table",
+      "title": "Pets",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "cat",
+              "dog",
+              "bird",
+              "reptile",
+              "other"
+            ],
+            "default": "dog"
+          },
+          "name": {
+            "type": "string"
+          },
+          "fixed": {
+            "type": "boolean",
+            "title": "spayed / neutered"
+          }
+        }
+      }
+    }
+  }
+}

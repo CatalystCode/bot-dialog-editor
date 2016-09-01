@@ -1,0 +1,75 @@
+{
+  "id": "steps",
+  "type": "array",
+  "title": "Steps",
+  "format": "tabs",
+  "options": {
+    "grid_columns": 12
+  },
+  "items": {
+    "type": "object",
+    "title": "New",
+    "oneOf": [
+      {
+        "title": "Step",
+        "id": "step",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "This id will be used when referencing this node"
+          },
+          "type": {
+            "type": "string",
+            "enum": [ "text", "prompt", "score" ],
+            "default": "text"
+          },
+          "data": {
+            "type": "object",
+            "format": "grid",
+            "defaultProperties": [ "text" ],
+            "options": {
+              "grid_columns": 12
+            },
+            "properties": {
+              "text": {
+                "type": "string"
+              },
+              "models": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "scenarios": {
+            "type": "array",
+            "format": "tabs",
+            "items": {
+              "type": "object",
+              "properties": {
+                "condition": {
+                  "type": "string"
+                },
+                "steps": {
+                  "$ref": "#"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "id": "scenarioReference",
+        "title": "ScenarioReference",
+        "type":"object",
+        "properties":{
+          "subScenario": {
+            "type": "string"
+          }
+        }
+      }
+    ]
+  }
+}

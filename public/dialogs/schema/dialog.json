@@ -1,0 +1,147 @@
+{
+  "title": "Dialog",
+  "headerTemplate": "<%= self.id %>",
+  "type": "object",
+  "format": "grid",
+  "id": "dialog",
+  "options": { "disable_properties": false, "disable_edit_json": false },
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "This id will be used when referencing this node"
+    },
+    "type": {
+      "type": "string",
+      "enum": [ "sequence" ]
+    },
+    "steps": { "$ref": "#/definitions/steps" },
+    "models": {
+      "type": "array",
+      "title": "Models",
+      "format": "table",
+      "options": { "grid_columns": 12 },
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "url": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "steps": {
+      "id": "steps",
+      "type": "array",
+      "title": "Steps",
+      "format": "tabs",
+      "options": { "grid_columns": 12 },
+      "items": {
+        "type": "object",
+        "headerTemplate": "<%= self.id || self.subScenario || 'Step' %>",
+        "oneOf": [
+          {
+            "title": "Step",
+            "id": "step",
+            "type": "object",
+            "required": [ "id" ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "This id will be used when referencing this node",
+                "options": { "grid_columns": 6 }
+              },
+              "type": {
+                "id": "step-type",
+                "type": "string",
+                "enum": [ "text", "prompt", "score" ],
+                "default": "text",
+                "options": { "grid_columns": 6 }
+              },
+              "data": {
+                "type": "object",
+                "required": [],
+                "options": { "disable_properties": false },
+                "additionalProperties": true,
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [ "text", "time", "choice", "confirm", "number" ]
+                  },
+                  "options": {
+                    "title": "Options",
+                    "uniqueItems": true,
+                    "options": { "grid_columns": 6 },
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "default": ["None"]
+                  },
+                  "models": {
+                    "title": "Models",
+                    "uniqueItems": true,
+                    "options": { "grid_columns": 12 },
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["bot1","bottle","common-bot","wow that model"]
+                    }
+                  }
+                }
+              },
+              "scenarios": {
+                "type": "array",
+                "format": "tabs",
+                "items": {
+                  "title": "Scenario",
+                  "type": "object",
+                  "properties": {
+                    "condition": {
+                      "type": "string"
+                    },
+                    "steps": {
+                      "$ref": "#/definitions/steps"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "id": "textStep",
+            "title": "Text Step",
+            "type":"object",
+            "properties":{
+              "type": {
+                "type":"string",
+                "id": "text-step-hide"
+              },
+              "data": {
+                "type":"object",
+                "properties":{
+                  "text": {
+                    "type": "string"
+                  } 
+                }
+              }
+            }
+          },
+          {
+            "id": "scenarioReference",
+            "title": "Scenario Reference",
+            "type":"object",
+            "properties":{
+              "subScenario": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
