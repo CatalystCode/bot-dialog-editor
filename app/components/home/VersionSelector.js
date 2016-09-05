@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from 'react-router';
 import HomeStore from '../../stores/HomeStore'
 import HomeActions from '../../actions/HomeActions';
+import Version from './Version';
 import _ from 'underscore';
 
 class VersionSelector extends React.Component {
@@ -14,6 +15,7 @@ class VersionSelector extends React.Component {
       error: HomeStore.getState().errorVersionName
     };
     this.onChange = this.onChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.checkVersion = this.checkVersion.bind(this);
     this.createVersion = this.createVersion.bind(this);
   }
@@ -58,9 +60,9 @@ class VersionSelector extends React.Component {
   }
 
   createVersion() {
+    var $ = window.$;
     if (this.state.valid) {
       HomeActions.createVersion($(this.refs.versionName).val());
-      var $ = window.$;
       $('#create-version-modal').modal('hide');
     }
   }
@@ -70,7 +72,7 @@ class VersionSelector extends React.Component {
     var self = this;
 
     var versionOptions = this.state.versions.map(version => (
-      <button type="button" className="btn btn-info btn-sm" onClick={this.handleClick.bind(self, version)}>
+      <button key={version} type="button" className="btn btn-info btn-sm" onClick={this.handleClick.bind(self, version)}>
         <span className="glyphicon glyphicon-book"></span> {version}
       </button>
     ));
@@ -78,16 +80,22 @@ class VersionSelector extends React.Component {
     return (
       <div className='btn-toolbar'>
         <div className='btn-group'>
-          <button type="button" className="btn btn-default btn-sm" onClick={this.handleClick.bind(self, null)}>
+          <button key="active" type="button" className="btn btn-default btn-sm" onClick={this.handleClick.bind(self, null)}>
             <span className="glyphicon glyphicon-book"></span> active
           </button>
-          { versionOptions }
+          { this.state.versions.map(version => ( <Version name={version} onClick={this.handleClick} /> )) }
         </div>
         <div className='btn-group'>
           <button type="button" className="btn btn-default btn-sm" data-toggle="modal" data-target="#create-version-modal">
             <span className="glyphicon glyphicon-plus"></span> new version
           </button>
         </div>
+
+        {
+          /**
+           * This section is defining the dialog popup for creating a new version
+           */
+        }
 
         <div className="modal fade" id="create-version-modal" tabindex="-1" role="dialog" aria-hidden="true">
           <div className="modal-dialog" role="document">
@@ -106,7 +114,7 @@ class VersionSelector extends React.Component {
                          onChange={this.checkVersion} />
                   <span className={this.state.valid ? "form-control-feedback glyphicon glyphicon-ok" : ""}></span>
                   <span className={this.state.error ? "form-control-feedback glyphicon glyphicon-remove" : ""}></span>
-                  <span class="help-block">Validation is based on string length.</span>
+                  <span className="help-block">Validation is based on string length.</span>
                 </div>
               </div>
               <div className="modal-footer">

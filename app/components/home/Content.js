@@ -2,6 +2,8 @@ import React from 'react';
 import {Link} from 'react-router';
 import HomeStore from '../../stores/HomeStore'
 import HomeActions from '../../actions/HomeActions';
+import ContentCollapse from './ContentCollapse';
+import ContentExpand from './ContentExpand';
 
 class Content extends React.Component {
 
@@ -11,11 +13,16 @@ class Content extends React.Component {
       content: HomeStore.getState().content
     };
     this.onChange = this.onChange.bind(this);
+    this.clickExpand = this.clickExpand.bind(this);
+    this.clickCollapse = this.clickCollapse.bind(this);
   }
 
   componentDidMount() {
     HomeStore.listen(this.onChange);
-    HomeActions.getContent(this.props.dialog, this.props.version);
+
+    if (this.props.dialog) {
+      HomeActions.getContent(this.props.dialog, this.props.version);
+    }
   }
 
   componentDidUpdate() {
@@ -48,18 +55,10 @@ class Content extends React.Component {
 
     return (
       <div className={ this.state.content ? '' : 'hide' }>
-        <h3>Dialog Content</h3>
+        <h3>Dialog Content <span className={ self.props.dialog ? '' : 'hide' }>[{self.props.dialog}]</span></h3>
         <div className='btn-toolbar'>
-          <div className={ this.state.opened ? '' : 'hide' }>
-            <button type="button" className='btn btn-info btn-sm' onClick={this.clickCollapse.bind(self)}>
-              <span className="glyphicon glyphicon-collapse-up"></span> Collapse
-            </button>
-          </div>
-          <div className={ !this.state.opened ? '' : 'hide' }>
-            <button type="button" className='btn btn-info btn-sm' onClick={this.clickExpand.bind(self)}>
-              <span className="glyphicon glyphicon-collapse-down"></span> Expand
-            </button>
-          </div>
+          <ContentCollapse onClick={this.clickCollapse} opened={this.state.opened} />
+          <ContentExpand onClick={this.clickExpand} opened={this.state.opened} />
           <Link to={'/edit/' + encodeURIComponent(self.props.dialog) + '/' + encodeURIComponent(self.props.version)} className='btn btn-info btn-sm'>
             <span className="glyphicon glyphicon-edit"></span> Edit
           </Link>

@@ -36,7 +36,6 @@
           ]
         },
         {
-          /// I'm guessing "the first time to call in this regard...
           "condition": "firstTime",
           "steps": [
             {

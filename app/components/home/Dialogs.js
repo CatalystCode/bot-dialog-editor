@@ -40,15 +40,17 @@ class Dialogs extends React.Component {
     var self = this;
 
     var dialogRender = this.state.dialogs.map(dialog => (
-        <button type="button" className="btn btn-info btn-lg" onClick={this.handleClick.bind(self, dialog, self.state.version)}>
-          <span className="glyphicon glyphicon-comment"></span> {dialog}
-        </button>
+        <li key={dialog} className="list-item">
+          <button type="button" className="btn btn-info btn-lg" onClick={this.handleClick.bind(self, dialog, self.state.version)}>
+            <span className="glyphicon glyphicon-comment"></span> {dialog}
+          </button>
+        </li>
       ));
 
     return (
-      <div className='btn-toolbar'>
+      <ul className='list-inline'>
         { dialogRender }
-      </div>
+      </ul>
     );
   }
 }
